@@ -18,13 +18,13 @@ struct Profile {
     Profile* next;
 };
 
-auto equalKey = [](const Profile* p, const KeyType& key) -> bool {
+auto equal_key = [](const Profile* p, const KeyType& key) -> bool {
     return holds_alternative<us>(key) ? (p->id == get<us>(key)) : (p->name == get<string>(key));
 };
 
 Profile* find(Profile* head, const KeyType& key) {
     for (Profile* tmp = head; tmp != nullptr; tmp = tmp->next) {
-        if (equalKey(tmp, key))
+        if (equal_key(tmp, key))
             return tmp;
     }
     return nullptr;
@@ -160,7 +160,7 @@ void check(Profile* head) {
 void del(Profile*& head, const KeyType& key) {
     if (!head)
         return;
-    if (equalKey(head, key)) {
+    if (equal_key(head, key)) {
         Profile* temp = head;
         head = head->next;
         delete temp;
@@ -168,7 +168,7 @@ void del(Profile*& head, const KeyType& key) {
         return;
     }
     Profile* current = head;
-    while (current->next != nullptr && !equalKey(current->next, key))
+    while (current->next != nullptr && !equal_key(current->next, key))
         current = current->next;
     if (current->next != nullptr) {
         Profile* temp = current->next;
