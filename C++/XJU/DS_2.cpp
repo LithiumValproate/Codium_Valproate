@@ -40,19 +40,15 @@ class Stack {
     }
 
     bool pop(int& value) {
-        if (is_empty()) {
-            cout << "Stack is empty.\n";
+        if (is_empty())
             return false;
-        }
         value = data[top--];
         return true;
     }
 
     bool peek(int& value) const {
-        if (is_empty()) {
-            cout << "Stack is empty.\n";
+        if (is_empty())
             return false;
-        }
         value = data[top];
         return true;
     }
