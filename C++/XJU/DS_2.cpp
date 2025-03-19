@@ -58,16 +58,6 @@ class Stack {
     }
 };
 
-bool is_valid_digit(char c, int base) {
-    c = toupper(c);
-    if (base <= 10) {
-        return c >= '0' && c < ('0' + base);
-    } else if (base == 16) {
-        return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F');
-    }
-    return false;
-}
-
 int detect(const string& numStr) {
     string digits = numStr;
     int base = 10;
@@ -83,8 +73,17 @@ int detect(const string& numStr) {
             digits = digits.substr(1);
         }
     }
+    auto is_valid_digit = [base](char c) -> bool {
+        c = toupper(c);
+        if (base <= 10) {
+            return c >= '0' && c < ('0' + base);
+        } else if (base == 16) {
+            return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F');
+        }
+        return false;
+    };
     for (char c : digits)
-        if (!is_valid_digit(c, base))
+        if (!is_valid_digit(c))
             return -1;
     try {
         return stoi(digits, nullptr, base);
