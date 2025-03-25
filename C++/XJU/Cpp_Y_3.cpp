@@ -1,26 +1,37 @@
 #include <cmath>
 #include <iostream>
 using namespace std;
+
 class Point {
   private:
     double x;
     double y;
+    friend class Line;
 
   public:
-    Point(int x0, int y0) {
+    Point() : x(0), y(0) {
+        cout << "Call the default constructor.\n";
+    }
+    Point(double x0, double y0) : x(x0), y(y0) {
+        cout << "Call the parameterized constructor.\n";
+    }
+    Point(const Point& p) : x(p.x), y(p.y) {
+        cout << "Call the duplicating constructor.\n";
+    }
+    void set_xy(double x0, double y0) {
         x = x0;
         y = y0;
     }
-    void set_xy(int x0, int y0) {
-        x = x0;
-        y = y0;
+    ~Point() {
+        cout << "Call the destructor.\n";
     }
 
-    void get_x() {
-        cout << x << endl;
+
+    double get_x() const {
+        return x;
     }
-    void get_y() {
-        cout << y << endl;
+    double get_y() const {
+        return y;
     }
 };
 
@@ -30,36 +41,61 @@ class Line {
     Point ePoint;
 
   public:
-    void set_sPoint(Point p) {
+    void set_sPoint(const Point& p) {
         sPoint = p;
     }
-    void set_ePoint(Point p) {
+    void set_ePoint(const Point& p) {
         ePoint = p;
     }
 
-    void get_sPoint() {
-        printf("(%d,%d)", sPoint.x, sPoint.y);
+    void get_sPoint() const {
+        cout << "Start point(" << sPoint.get_x() << ", " << sPoint.get_y() << ")\n";
     }
-    void get_ePoint() {
-        printf("(%d,%d)", ePoint.x, ePoint.y);
-    }
-
-    double get_length() {
-        return sqrt(pow(fabs(ePoint.x - sPoint.x), 2) + pow(fabs(ePoint.y - sPoint.y), 2));
+    void get_ePoint() const {
+        cout << "End point(" << ePoint.get_x() << ", " << ePoint.get_y() << ")\n";
     }
 
-    bool is_point_on_line(Point p) {
-        double x0 = fabs(ePoint.x - sPoint.x);
-        double y0 = fabs(ePoint.y - sPoint.y);
-        double xp = fabs(p.x - sPoint.x);
-        double yp = fabs(p.y - sPoint.y);
-        double dot = x0 * xp + y0 * yp;
-        bool inRange = (dot >= 0 && dot <= get_length());
+    double get_length() const {
+        return sqrt(pow(ePoint.get_x() - sPoint.get_x(), 2) + pow(ePoint.get_y() - sPoint.get_y(), 2));
+    }
+
+    bool is_point_on_line(const Point& p) const {
+        double x0 = ePoint.get_x() - sPoint.get_x();
+        double y0 = ePoint.get_y() - sPoint.get_y();
+        double xp = p.get_x() - sPoint.get_x();
+        double yp = p.get_y() - sPoint.get_y();
         double cross = xp * y0 - yp * x0;
-        bool collinear = fabs(cross) < 1e-9;
-        return (inRange && collinear) ? true : false;
+        if (fabs(cross) > 1e-9)
+            return false;
+        double dot = xp * x0 + yp * y0;
+        return dot >= 0 && dot <= (x0 * x0 + y0 * y0);
     }
 };
 
 int main() {
+    Point s, e, d, p;
+    Line l;
+    double x, y;
+    cout << "Enter x and y of start point:\n";
+    cin >> x >> y;
+    s = Point(x, y);
+    cout << "Enter x and y of end point:\n";
+    cin >> x >> y;
+    e = Point(x, y);
+    d = Point(s);
+    cout << "Copied point x: " << d.get_x() << ", y: " << d.get_y() << endl;
+    l.set_sPoint(s);
+    l.set_ePoint(e);
+    l.get_sPoint();
+    l.get_ePoint();
+    cout << "Length is " << l.get_length() << endl;
+    cout << "Enter x and y of a point:\n";
+    cin >> x >> y;
+    p = Point(x, y);
+    if (l.is_point_on_line(p))
+        cout << "On line.\n";
+    else
+        cout << "Not on line.\n";
+    system("pause");
+    return 0;
 }

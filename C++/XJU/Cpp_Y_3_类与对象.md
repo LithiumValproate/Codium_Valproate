@@ -66,31 +66,124 @@ int main(){
 运行结果截图：
 <img src="https://gitee.com/yannyyy/object-oriented-programming/raw/master/imgs/helloworld.png" alt="Hello World示例" style="zoom:150%;" />
 
-1. 设计`Point`类表示二维平面上点。
+1. 设计`Point`类表示二维平面上点；
+    设计`Line`类表示二维平面上的线段；
+    在`main`函数中实例化相应对象并且调用以上类中的所有行为。
 
 ```cpp
+#include <cmath>
+#include <iostream>
+using namespace std;
 
+class Point {
+  private:
+    double x;
+    double y;
+    friend class Line;
+
+  public:
+    Point() : x(0), y(0) {
+        cout << "Call the default constructor.\n";
+    }
+    Point(double x0, double y0) : x(x0), y(y0) {
+        cout << "Call the parameterized constructor.\n";
+    }
+    Point(const Point& p) : x(p.x), y(p.y) {
+        cout << "Call the duplicating constructor.\n";
+    }
+    void set_xy(double x0, double y0) {
+        x = x0;
+        y = y0;
+    }
+    ~Point() {
+        cout << "Call the destructor.\n";
+    }
+
+
+    double get_x() const {
+        return x;
+    }
+    double get_y() const {
+        return y;
+    }
+};
+
+class Line {
+  private:
+    Point sPoint;
+    Point ePoint;
+
+  public:
+    void set_sPoint(const Point& p) {
+        sPoint = p;
+    }
+    void set_ePoint(const Point& p) {
+        ePoint = p;
+    }
+
+    void get_sPoint() const {
+        cout << "Start point(" << sPoint.get_x() << ", " << sPoint.get_y() << ")\n";
+    }
+    void get_ePoint() const {
+        cout << "End point(" << ePoint.get_x() << ", " << ePoint.get_y() << ")\n";
+    }
+
+    double get_length() const {
+        return sqrt(pow(ePoint.get_x() - sPoint.get_x(), 2) + pow(ePoint.get_y() - sPoint.get_y(), 2));
+    }
+
+    bool is_point_on_line(const Point& p) const {
+        double x0 = ePoint.get_x() - sPoint.get_x();
+        double y0 = ePoint.get_y() - sPoint.get_y();
+        double xp = p.get_x() - sPoint.get_x();
+        double yp = p.get_y() - sPoint.get_y();
+        double cross = xp * y0 - yp * x0;
+        if (fabs(cross) > 1e-9)
+            return false;
+        double dot = xp * x0 + yp * y0;
+        return dot >= 0 && dot <= (x0 * x0 + y0 * y0);
+    }
+};
+
+int main() {
+    Point s, e, d, p;
+    Line l;
+    double x, y;
+    cout << "Enter x and y of start point:\n";
+    cin >> x >> y;
+    s = Point(x, y);
+    cout << "Enter x and y of end point:\n";
+    cin >> x >> y;
+    e = Point(x, y);
+    d = Point(s);
+    cout << "Copied point x: " << d.get_x() << ", y: " << d.get_y() << endl;
+    l.set_sPoint(s);
+    l.set_ePoint(e);
+    l.get_sPoint();
+    l.get_ePoint();
+    cout << "Length is " << l.get_length() << endl;
+    cout << "Enter x and y of a point:\n";
+    cin >> x >> y;
+    p = Point(x, y);
+    if (l.is_point_on_line(p))
+        cout << "On line.\n";
+    else
+        cout << "Not on line.\n";
+    system("pause");
+    return 0;
+}
 ```
+
+运行结果截图：
+<img src=http://167.179.97.78/wp-content/uploads/2025/03/屏幕截图-2025-03-25-121138.png>
 
 
 ## 四、实验小结
 
 （包括问题和解决办法、心得体会。 __必须要有具体错误截图和针对性讨论，不能仅有文字文字说明。__）__（20分）__
 
-#### 实验小结参考示例：
+__问题与解决办法：__ `Line`类无法访问`Point`类中的私有数据。
 
-**问题与解决办法**
+__解决办法：__ 查找资料后，学习到了添加`friend`语句。
 
-1、编译出错，提示“error: unexpected character <U+201C>”
-
-**解决办法：**查找资料后，发现中文状态输入双引号，系统只允许英文状态下双引号字符。改正后，错误消失,程序运行正常。
-
-**心得体会**：
-
-- 编写C程序要遵循语法规范，特别是符号输入不仅要注意大小写，而且要注意英文输入法下输入。
-
-- 应根据编译提示，定位和修改程序中的错误。
-
-  
-
-#### 重要提示，各位同学务必遵照此规范和格式，使用markdown格式编辑实验报告并在系统中提交。本课程不接收其它方式提交的实验报告。切记切记！
+__心得体会：__ 多查资料。
