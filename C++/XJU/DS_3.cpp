@@ -19,6 +19,13 @@ struct Chars {
         strcpy(data, str);
     }
 
+    Chars(const Chars& other) {
+        length = other.length;
+        capacity = other.capacity;
+        data = new char[capacity];
+        strcpy(data, other.data);
+    }
+
     Chars(const Chars& str1, const Chars& str2) {
         length = str1.length + str2.length;
         capacity = length + 1;
@@ -99,6 +106,21 @@ struct Chars {
         delete[] rep;
         return static_cast<size_t>(-1);
     }
+
+    Chars ins_char(const Chars& ins, size_t index) {
+        if (index > length)
+            index = length;
+        size_t tmpLen = length;
+        return sub_str(0, index) + ins + sub_str(index, tmpLen - index);
+    }
+
+    Chars del_char(size_t start, size_t len) {
+        if (len == 0 || len < start)
+            return *this;
+        if (len > length)
+            return Chars("");
+        return sub_str(0, start) + sub_str(start + len, length);
+    }
 };
 
 ostream& operator<<(ostream& os, const Chars& str) {
@@ -139,7 +161,8 @@ int main() {
             cout << "Input the string: ";
             getline(cin, input);
             Chars str(input.c_str());
-            cout << "Length is " << str.length << endl
+            cout << endl
+                 << "Length is " << str.length << endl
                  << endl;
             break;
         }
@@ -151,6 +174,7 @@ int main() {
             getline(cin, in2);
             Chars str1(in1.c_str()), str2(in2.c_str());
             int res = str_cmp(str1, str2);
+            cout << endl;
             switch (res) {
             case 0:
                 cout << "Equal\n"
@@ -177,7 +201,8 @@ int main() {
             getline(cin, in2);
             Chars str1(in1.c_str()), str2(in2.c_str());
             Chars ans = str1 + str2;
-            cout << "Concatenated string: " << ans << endl
+            cout << endl
+                 << "Concatenated string: " << ans << endl
                  << endl;
             break;
         }
@@ -191,7 +216,6 @@ int main() {
             cin >> start;
             cout << "Length is: ";
             cin >> len;
-            cin.ignore();
             Chars ans = str.sub_str(start, len);
             cout << endl
                  << "New string: " << ans << endl
@@ -207,22 +231,46 @@ int main() {
             getline(cin, in2);
             Chars str2(in2.c_str());
             int ans = str1.find(str2);
-            cout << "The first index of substring in main string is " << ans << endl;
+            cout << endl
+                 << "The first index of substring in main string is " << ans << endl
+                 << endl;
             break;
         }
         case 6: {
-
+            string in1, in2;
+            cout << "Input origin string: ";
+            getline(cin, in1);
+            cout << "Input characters to insert: ";
+            getline(cin, in2);
+            Chars str1(in1.c_str()), str2(in2.c_str());
+            int start;
+            cout << "Starting at: ";
+            cin >> start;
+            cout << endl
+                 << "New string: " << str1.ins_char(str2, start) << endl
+                 << endl;
             break;
         }
         case 7: {
-
+            string input;
+            cout << "Input origin string: ";
+            getline(cin, input);
+            Chars str(input.c_str());
+            int start, len;
+            cout << "Position to delete: ";
+            cin >> start;
+            cout << "Number of characters to delete: ";
+            cin >> len;
+            cout << endl
+                 << "New string: " << str.del_char(start, len) << endl
+                 << endl;
             break;
         }
         case 8:
             system("pause");
             return 0;
         default:
-            cout << "Invalid option. Try again." << endl;
+            cout << "Invalid option" << endl;
             break;
         }
     }
