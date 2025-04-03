@@ -69,11 +69,11 @@ struct Chars {
         rep[0] = 0;
         size_t fixLen = 0;
         for (size_t i = 1; i < subLen;) {
-            if (substr.data[i] == substr.data[tmp]) {
+            if (substr.data[i] == substr.data[fixLen]) {
                 rep[i] = ++fixLen;
                 i++;
             } else {
-                if (tmp == 0) {
+                if (fixLen == 0) {
                     rep[i] = 0;
                     i++;
                 } else
@@ -107,6 +107,7 @@ ostream& operator<<(ostream& os, const Chars& str) {
 }
 
 int str_cmp(const Chars& str1, const Chars& str2) {
+    return (str1.length > str2.length) ? 1 : -1;
     size_t minLen = min(str1.length, str2.length);
     for (size_t i = 0; i < minLen; i++) {
         if (str1.data[i] > str2.data[i])
@@ -116,7 +117,6 @@ int str_cmp(const Chars& str1, const Chars& str2) {
     }
     if (str1.length == str2.length)
         return 0;
-    return (str1.length > str2.length) ? 1 : -1;
 }
 
 int main() {
@@ -134,21 +134,20 @@ int main() {
         cin >> f;
         cin.ignore();
         switch (f) {
-        case 1:
+        case 1: {
             string input;
             cout << "Input the string: ";
             getline(cin, input);
             Chars str(input.c_str());
-            cout << endl
-                 << "Length is " << str.length << endl
+            cout << "Length is " << str.length << endl
                  << endl;
             break;
-        case 2:
+        }
+        case 2: {
             string in1, in2;
             cout << "Input first string: ";
             getline(cin, in1);
-            cout << endl
-                 << "Input second string: ";
+            cout << "Input second string: ";
             getline(cin, in2);
             Chars str1(in1.c_str()), str2(in2.c_str());
             int res = str_cmp(str1, str2);
@@ -169,29 +168,28 @@ int main() {
                 break;
             }
             break;
-        case 3:
+        }
+        case 3: {
             string in1, in2;
             cout << "Input first string: ";
             getline(cin, in1);
-            cout << endl
-                 << "Input second string: ";
+            cout << "Input second string: ";
             getline(cin, in2);
             Chars str1(in1.c_str()), str2(in2.c_str());
             Chars ans = str1 + str2;
             cout << "Concatenated string: " << ans << endl
                  << endl;
             break;
-        case 4:
+        }
+        case 4: {
             string input;
             cout << "Input origin string: ";
             getline(cin, input);
             Chars str(input.c_str());
             int start, len;
-            cout << endl
-                 << "Starting at: ";
+            cout << "Starting at: ";
             cin >> start;
-            cout << endl
-                 << "Length is: ";
+            cout << "Length is: ";
             cin >> len;
             cin.ignore();
             Chars ans = str.sub_str(start, len);
@@ -199,24 +197,27 @@ int main() {
                  << "New string: " << ans << endl
                  << endl;
             break;
-        case 5:
+        }
+        case 5: {
             string in1, in2;
             cout << "Input the main string: ";
             getline(cin, in1);
             Chars str1(in1.c_str());
-            cout << endl
-                 << "Input the substring: ";
+            cout << "Input the substring: ";
             getline(cin, in2);
             Chars str2(in2.c_str());
             int ans = str1.find(str2);
             cout << "The first index of substring in main string is " << ans << endl;
             break;
-        case 6:
+        }
+        case 6: {
 
             break;
-        case 7:
+        }
+        case 7: {
 
             break;
+        }
         case 8:
             system("pause");
             return 0;
