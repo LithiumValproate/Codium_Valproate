@@ -58,22 +58,23 @@ struct Chars {
 		return res;
 	}
 
-	size_t find(const char* substr) const {
-		if (!substr || !data)
-			return static_cast<size_t>(-1);
-		size_t sublen = strlen(substr);
-		if (sublen > length)
-			return static_cast<size_t>(-1);
-		for (size_t i = 0; i <= length - sublen; i++) {
-			for (size_t j = 0; j < sublen; j++) {
-				if (data[i + j] != substr[j])
-					break;
-				if (j == sublen)
-					return i;
-			}
-		}
-		return static_cast<size_t>(-1);
-	}
+    size_t find(const char* substr) const {
+        if (!substr || !data)
+            return static_cast<size_t>(-1);
+        size_t sublen = strlen(substr);
+        if (sublen > length)
+            return static_cast<size_t>(-1);
+        for (size_t i = 0; i <= length - sublen; i++) {
+            size_t j = 0;
+            for (; j < sublen; j++) {
+                if (data[i + j] != substr[j])
+                    break;
+            }
+            if (j == sublen)
+                return i;
+        }
+        return static_cast<size_t>(-1);
+    }
 };
 
 int str_cmp(const Chars& str1, const Chars& str2) {
