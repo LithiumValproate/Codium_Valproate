@@ -47,13 +47,12 @@ struct Chars {
         if (sublen > length)
             return static_cast<size_t>(-1);
         for (size_t i = 0; i <= length - sublen; i++) {
-            size_t j = 0;
-            for (; j < sublen; j++) {
+            for (size_t j = 0; j < sublen; j++) {
                 if (data[i + j] != substr[j])
                     break;
+                if (j == sublen)
+                    return i;
             }
-            if (j == sublen)
-                return i;
         }
         return static_cast<size_t>(-1);
     }
