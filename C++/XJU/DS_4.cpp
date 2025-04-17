@@ -87,6 +87,59 @@ bool search(TreeNode* root, int value) {
         return search(root->right, value);
 }
 
+TreeNode* del(TreeNode* root, int value) {
+    if (root == nullptr) return nullptr;
+    if (value < root->value) {
+        root->left = del(root->left, value);
+    } else if (value > root->value) {
+        root->right = del(root->right, value);
+    } else {
+        if (root->left == nullptr) {
+            TreeNode* tmp = root->right;
+            delete root;
+            return tmp;
+        } else if (root->right == nullptr) {
+            TreeNode* tmp = root->left;
+            delete root;
+            return tmp;
+        }
+        TreeNode* tmp = root->right;
+        while (tmp && tmp->left != nullptr) {
+            tmp = tmp->left;
+        }
+        root->value = tmp->value;
+        root->right = del(root->right, tmp->value);
+    }
+    return root;
+}
+
+bool is_full(TreeNode* root) {
+    if (root == nullptr) return true;
+    if (root->left == nullptr && root->right == nullptr) return true;
+    if (root->left != nullptr && root->right != nullptr)
+        return is_full(root->left) && is_full(root->right);
+    return false;
+}
+
+bool is_complete(TreeNode* root) {
+    if (root == nullptr) return true;
+    queue<TreeNode*> q;
+    q.push(root);
+    bool end = false;
+    while (!q.empty()) {
+        TreeNode* node = q.front();
+        q.pop();
+        if (node == nullptr) {
+            end = true;
+        } else {
+            if (end) return false;
+            q.push(node->left);
+            q.push(node->right);
+        }
+    }
+    return true;
+}
+
 void destroy(TreeNode* root) {
     if (root == nullptr) return;
     destroy(root->left);
@@ -119,12 +172,24 @@ int main() {
     cout << "Sum: " << sum(root) << endl;
     cout << "Max: " << max(root) << endl;
     cout << "Min: " << min(root) << endl;
-    cout << "Search for: ";
-    cin >> value;
-    search(root, value) ? cout << "Found" : cout << "Not found";
-    cout << endl;
+    cout << "Is full: " << (is_full(root) ? "Yes" : "No") << endl;
+    cout << "Is complete: " << (is_complete(root) ? "Yes" : "No") << endl;
+    int selectFunc;
+    cout << "Select function:\n1. Delete\n2. Search\n";
+    cin >> selectFunc;
+    if (selectFunc == 1) {
+        cout << "Enter value to delete: ";
+        cin >> value;
+        root = del(root, value);
+        cout << "Deleted " << value << endl;
+    } else if (selectFunc == 2) {
+        cout << "Enter value to search: ";
+        cin >> value;
+        search(root, value) ? cout << "Found" : cout << "Not found";
+    }
+    else cout << "Invalid selection" << endl;
     destroy(root);
-    cout << "Tree destroyed." << endl;
+    cout << "Tree destroyed" << endl;
     system("pause");
     return 0;
 }
