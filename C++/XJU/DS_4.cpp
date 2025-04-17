@@ -147,24 +147,17 @@ void destroy(TreeNode* root) {
     delete root;
 }
 
-int main() {
-    TreeNode* root = nullptr;
-    cout << "Enter numbers to insert into the tree (end with -1): ";
-    int value;
-    while (cin >> value && value != -1) {
-        root = insert(root, value);
-    }
-    cout << endl;
-    cout << "Preorder: ";
+void show(TreeNode* root) {
+    cout << "Preorder: \n";
     preorder(root);
     cout << endl;
-    cout << "Inorder: ";
+    cout << "Inorder: \n";
     inorder(root);
     cout << endl;
-    cout << "Postorder: ";
+    cout << "Postorder: \n";
     postorder(root);
     cout << endl;
-    cout << "Level order: ";
+    cout << "Level order: \n";
     levelorder(root);
     cout << endl;
     cout << "Count: " << count(root) << endl;
@@ -174,6 +167,16 @@ int main() {
     cout << "Min: " << min(root) << endl;
     cout << "Is full: " << (is_full(root) ? "Yes" : "No") << endl;
     cout << "Is complete: " << (is_complete(root) ? "Yes" : "No") << endl;
+}
+
+int main() {
+    TreeNode* root = nullptr;
+    cout << "Enter numbers to insert into the tree (end with -1): ";
+    int value;
+    while (cin >> value && value != -1)
+        root = insert(root, value);
+    cout << endl;
+    show(root);
     int selectFunc;
     cout << "Select function:\n1. Delete\n2. Search\n";
     cin >> selectFunc;
@@ -182,6 +185,7 @@ int main() {
         cin >> value;
         root = del(root, value);
         cout << "Deleted " << value << endl;
+        show(root);
     } else if (selectFunc == 2) {
         cout << "Enter value to search: ";
         cin >> value;
