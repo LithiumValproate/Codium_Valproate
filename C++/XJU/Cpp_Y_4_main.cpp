@@ -1,5 +1,6 @@
 #include "Cpp_Y_4_employee.h"
 #include <algorithm>
+#include <cctype>
 #include <iostream>
 #include <string>
 #include <variant>
@@ -40,6 +41,32 @@ void sort_employee(vector<Employee> eArray, int c) {
     for (const auto& e : eArray) {
         cout << e.get_id() << " " << e.get_gender() << " " << e.get_salary() << endl;
     }
+}
+
+void edit_employee(const string& id) {
+    auto it = find_if(eArray.begin(), eArray.end(), 
+        [&id](const Employee& e) { return e.get_id() == id; });
+    if (it == eArray.end()) {
+        cout << "Not found" << endl;
+        return;
+    }
+    cout << "Enter new data: ";
+    string input;
+    cin >> input;
+    KeyType value;
+    try {
+        double salary = stod(input);
+        value = salary;
+        it->set_salary(salary);
+        return;
+    } catch (...) {}
+    if (input.length() == 1 && (toupper(input[0]) == 'M' || toupper(input[0]) == 'F')) {
+        value = toupper(input[0]);
+        it->set_gender(input[0]);
+        return;
+    }
+    value = input;
+    it->set_id(input);
 }
 
 void select_func(int c) {
