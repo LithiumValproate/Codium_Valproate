@@ -1,5 +1,5 @@
-#ifndef PERSON_H
-#define PERSON_H
+#ifndef CPP_Y_4_EMPLOYEE_H
+#define CPP_Y_4_EMPLOYEE_H
 #include <string>
 using std::string;
 
@@ -9,11 +9,12 @@ class Employee {
     char gender;
     double salary;
     static int amount;
+
   public:
-    Employee(const string&, char, double);
+    Employee(const string& id = "num000", char g = 'M', double s = 0.0);
     Employee(const Employee& e);
     ~Employee();
-    void set_id(const string&); 
+    void set_id(const string&);
     string get_id() const;
     void set_gender(char);
     char get_gender() const;
