@@ -1,6 +1,8 @@
 #include <climits>
 #include <iostream>
+#include <regex>
 #include <queue>
+#include <sstream>
 using namespace std;
  
 struct TreeNode {
@@ -10,7 +12,18 @@ struct TreeNode {
     TreeNode(int val) : value(val), left(nullptr), right(nullptr) {};
 };
 
+bool search(TreeNode* root, int value) {
+    if (root == nullptr) return false;
+    if (root->value == value) return true;
+    if (value < root->value)
+        return search(root->left, value);
+    else
+        return search(root->right, value);
+}
+
 TreeNode* insert(TreeNode* root, int value) {
+    if (search(root, value))
+        return root;
     if (root == nullptr) return new TreeNode(value);
     if (value < root->value)
         root->left = insert(root->left, value);
@@ -78,15 +91,6 @@ int min(TreeNode* root) {
     return std::min(root->value, std::min(min(root->left), min(root->right)));
 }
 
-bool search(TreeNode* root, int value) {
-    if (root == nullptr) return false;
-    if (root->value == value) return true;
-    if (value < root->value)
-        return search(root->left, value);
-    else
-        return search(root->right, value);
-}
-
 TreeNode* del(TreeNode* root, int value) {
     if (root == nullptr) return nullptr;
     if (value < root->value) {
@@ -147,6 +151,24 @@ void destroy(TreeNode* root) {
     delete root;
 }
 
+bool input(TreeNode*& root) {
+    string line;
+    getline(cin, line);
+    if (line.empty()) return false;
+    istringstream iss(line);
+    string token;
+    while (iss >> token) {
+        if (!regex_match(token, regex("-?[0-9]+"))) {
+            cout << "Please input integers only!" << endl;
+            return false;
+        }
+        int value = stoi(token);
+        if (value == -1) break;
+        root = insert(root, value);
+    }
+    return true;
+}
+
 void show(TreeNode* root) {
     cout << "Preorder: \n";
     preorder(root);
@@ -172,12 +194,14 @@ void show(TreeNode* root) {
 int main() {
     TreeNode* root = nullptr;
     cout << "Enter numbers to insert into the tree (end with -1): ";
-    int value;
-    while (cin >> value && value != -1)
-        root = insert(root, value);
+    while (true) {
+        if (!input(root))
+            continue;
+        else break;
+    }
     cout << endl;
     show(root);
-    int selectFunc;
+    int value, selectFunc;
     cout << "Select function:\n1. Delete\n2. Search\n";
     cin >> selectFunc;
     if (selectFunc == 1) {
