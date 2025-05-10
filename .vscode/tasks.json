@@ -20,6 +20,20 @@
             ],
             "group": "build",
             "detail": "编译器: C:\\msys64\\mingw64\\bin\\g++.exe"
+        },
+        {
+            "label": "C/C++: clang 生成活动文件",
+            "type": "shell",
+            "command": "clang++",
+            "args": [
+                "-std=c++17",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}" 
+            ],
+            "group": "build",
+            "problemMatcher": ["$gcc"],
+            "detail": "编译 C++ 文件"
         }
     ]
 }
